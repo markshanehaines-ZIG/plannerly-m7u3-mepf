@@ -25,6 +25,9 @@ checkable verification rules enable AI-assisted cost estimation.
 > This scope is intentionally small to allow deep verification coverage
 > rather than broad, shallow treatment.
 
+The implementation scope is frozen to four MEPF element groups:
+D3010 Ductwork, E3010 Cable Trays, D2010 Pipework, and D4010 Sprinkler Heads.
+
 ## Key Assumptions
 - Models will be provided in IFC format (IFC4 preferred).
 - BIM Authoring tools: Revit MEP / AutoCAD MEP.

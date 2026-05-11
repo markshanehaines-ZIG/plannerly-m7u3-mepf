@@ -17,6 +17,35 @@
 | M-D3010-003 | Every duct segment shall carry a `UniClass 2015 Code` of `Ss_65_10_30` | IDS / Verify rule |
 | M-D3010-004 | Every duct fitting shall have a `Flow Rate (l/s)` parameter populated | IDS / Verify rule |
 
+## D3010 Detailed Task Descriptions
+
+**D3010-REQ-01 – Duct Type Name defined**
+All D3010 ducts must have a non-empty Type Name. Purpose: type-based estimating.
+Milestones: Stage 3 required, Stage 4 verified, Stage 5 maintained.
+R: Mechanical Designer. A: BIM Manager. C: Mechanical Contractor, Cost Consultant. I: PM, Client.
+
+**D3010-REQ-02 – Duct Length defined**
+All D3010 ducts must have numeric Length > 0 mm. Purpose: length-based quantity take-off.
+Milestones: Stage 3 required, Stage 4 verified, Stage 5 maintained.
+R: Mechanical Designer. A: BIM Manager. C: Mechanical Contractor, Cost Consultant. I: PM, Client.
+
+**D3010-REQ-03 – Duct Insulation Thickness defined**
+All D3010 ducts must have numeric Insulation Thickness; 0 allowed if explicit.
+Purpose: insulation-aware estimating.
+Milestones: Stage 3 required, Stage 4 verified, Stage 5 maintained.
+R: Mechanical Designer. A: BIM Manager. C: Mechanical Contractor, Cost Consultant. I: PM, Client.
+
+**D3010-REQ-04 – Duct System Classification defined**
+All D3010 ducts must have System Classification = SUPPLY, RETURN, or EXHAUST.
+Purpose: system-based grouping and estimating.
+Milestones: Stage 3 required, Stage 4 verified, Stage 5 maintained.
+R: Mechanical Designer. A: BIM Manager. C: Mechanical Contractor, Cost Consultant. I: PM, Client.
+
+**D3010-REQ-05 – Duct Fire Rating defined (where applicable)**
+All applicable D3010 ducts must have Fire Rating = 0, 30, 60, 120, or N/A.
+Purpose: compliance-aware estimating.
+Milestones: Stage 3 required where applicable, Stage 4 verified, Stage 5 maintained.
+R: Mechanical Designer. A: BIM Manager. C: Mechanical Contractor, Fire Engineer, Cost Consultant. I: PM, Client.
 ---
 
 ## Electrical – E3010 Cable Trays

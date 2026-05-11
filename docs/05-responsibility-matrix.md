@@ -28,7 +28,7 @@
 
 | ID | Role | Party |
 |---|---|---|
-| EIR | Employer's Information Requirements author | Client / Appointing Party |
+| EIR | Employer Information Requirements author | Client / Appointing Party |
 | LEA | Lead Appointed Party (BIM Lead) | Main Contractor |
 | MEP | MEP Sub-contractor | Specialist Sub-contractor |
 | QS | Quantity Surveyor / Cost Consultant | Cost Team |

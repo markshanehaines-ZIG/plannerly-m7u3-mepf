@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  BIMGUARD / Plannerly M7U3 MEPF
+  Information Delivery Specification (IDS)
+  Standard : ISO 21597 / buildingSMART IDS v0.9.7
+  Author   : Group 5 – Masters in AI in Architecture & Construction, Zigurat GIT
+  Created  : 2026-05-13
+  Scope    : 4 MEPF discipline groups – D3010 Ductwork, E3010 Cable Trays,
+             D2010 Pipework, D4010 Sprinkler Heads
+  Usage    : Run against project IFC model using ifcopenshell ids-audit,
+             BIMcollab Zoom, or Solibri to verify model compliance before
+             information exchange. Results feed directly into Plannerly Verify.
+-->
+<ids xmlns="http://standards.buildingsmart.org/IDS"
+     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://standards.buildingsmart.org/IDS
+                         http://standards.buildingsmart.org/IDS/ids_09.xsd">
+
+  <info>
+    <title>MEPF AI Estimation Trust Requirements – IDS</title>
+    <copyright>Zigurat GIT – Masters in AI in Architecture and Construction</copyright>
+    <version>1.0.0</version>
+    <description>
+      Information Delivery Specification for MEPF building services covering
+      Mechanical Ductwork (D3010), Electrical Cable Trays (E3010),
+      Plumbing Pipework (D2010), and Fire Protection Sprinklers (D4010).
+      Each specification maps to a checkable Plannerly Verify rule and to
+      the ISO 19650-2 information exchange requirements for Stages 3–5.
+    </description>
+    <milestone>Stage 3 – Spatial Coordination; Stage 4 – Technical Design; Stage 5 – Construction</milestone>
+  </info>
+
+  <specifications>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         GROUP D3010 — MECHANICAL DUCTWORK
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- D3010-REQ-01 Ductwork Dimensions and LOD 300 -->
+    <specification name="D3010-REQ-01 Ductwork Dimensions and LOD 300"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="All ductwork elements shall be modelled to a minimum of LOD 300, with accurate cross-section dimensions, routing, and end connections. Required at Stage 3."
+                   instructions="Ensure duct width and height or diameter are populated in the model. Verify against LOD 300 definition per BIMForum LOD Spec."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcDuctSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_DuctSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>NominalWidth</simpleValue>
+          </baseName>
+        </property>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_DuctSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>NominalHeight</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D3010-REQ-02 Ductwork Material Specification -->
+    <specification name="D3010-REQ-02 Ductwork Material Specification"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="All ductwork elements shall have a material property assigned from the project-approved material schedule. Required at Stage 3."
+                   instructions="Material must be one of: GalvanisedSteelDuct, StainlessSteelDuct, AluminiumDuct, GRPDuct. Any other value fails this check."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcDuctSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <material necessity="required">
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="GalvanisedSteelDuct"/>
+              <xs:enumeration value="StainlessSteelDuct"/>
+              <xs:enumeration value="AluminiumDuct"/>
+              <xs:enumeration value="GRPDuct"/>
+            </xs:restriction>
+          </value>
+        </material>
+      </requirements>
+    </specification>
+
+    <!-- D3010-REQ-03 Ductwork System Classification -->
+    <specification name="D3010-REQ-03 Ductwork System Classification"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Each ductwork element shall be assigned a system type classification from the project MEP coding structure. Required at Stage 3."
+                   instructions="PredefinedType must be one of the listed values corresponding to air handling function."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcDuctSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_DuctSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>PredefinedType</simpleValue>
+          </baseName>
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="SUPPLYAIR"/>
+              <xs:enumeration value="EXHAUSTAIR"/>
+              <xs:enumeration value="EXTRACTAIR"/>
+              <xs:enumeration value="SMOKECONTROL"/>
+            </xs:restriction>
+          </value>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D3010-REQ-04 Ductwork Geometric Compliance LOD 350 -->
+    <specification name="D3010-REQ-04 Ductwork Geometric Compliance LOD 350"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Ductwork shall be modelled to LOD 350 at Stage 4, including insulation envelope dimensions. Required at Stage 4."
+                   instructions="InsulationThickness property must be present and non-zero for elements in conditioned or fire-rated zones."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcDuctSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLENGTHMEASURE" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_DuctSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>InsulationThickness</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D3010-REQ-05 Ductwork Insulation and Fire Rating -->
+    <specification name="D3010-REQ-05 Ductwork Insulation and Fire Rating"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Ductwork passing through fire compartments shall carry a FireRating attribute referencing BS EN 1366-1. Required at Stage 4."
+                   instructions="FireRating value must be a recognised period: 30, 60, 90, or 120 (minutes). Empty or zero values fail."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcDuctSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_DuctSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>FireRating</simpleValue>
+          </baseName>
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="30"/>
+              <xs:enumeration value="60"/>
+              <xs:enumeration value="90"/>
+              <xs:enumeration value="120"/>
+            </xs:restriction>
+          </value>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         GROUP E3010 — ELECTRICAL CABLE TRAYS
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- E3010-REQ-01 Cable Tray Geometry and Routing LOD 300 -->
+    <specification name="E3010-REQ-01 Cable Tray Geometry and Routing LOD 300"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="All cable tray elements shall be modelled to LOD 300 showing accurate tray width, depth, routing and support bracket spacing. Required at Stage 3."
+                   instructions="NominalWidth and NominalHeight must be present on all IfcCableCarrierSegment elements."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcCableCarrierSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLENGTHMEASURE" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_CableCarrierSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>NominalWidth</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- E3010-REQ-02 Cable Tray Material and Finish -->
+    <specification name="E3010-REQ-02 Cable Tray Material and Finish Specification"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Each cable tray shall carry a material and surface finish attribute from the approved schedule. Required at Stage 3."
+                   instructions="Material must be one of the listed approved values. Any non-listed value fails verification."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcCableCarrierSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <material necessity="required">
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="HotDipGalvanisedSteel"/>
+              <xs:enumeration value="StainlessSteel316"/>
+              <xs:enumeration value="PVCCoatedSteel"/>
+              <xs:enumeration value="AluminiumAlloy"/>
+            </xs:restriction>
+          </value>
+        </material>
+      </requirements>
+    </specification>
+
+    <!-- E3010-REQ-03 Cable Tray Load Classification -->
+    <specification name="E3010-REQ-03 Cable Tray Load Classification"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Cable tray elements shall include a load rating attribute (Light, Medium, Heavy). Required at Stage 4."
+                   instructions="LoadClass property must be present and must match one of the three approved classifications."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcCableCarrierSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_CableCarrierSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>LoadClass</simpleValue>
+          </baseName>
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Light"/>
+              <xs:enumeration value="Medium"/>
+              <xs:enumeration value="Heavy"/>
+            </xs:restriction>
+          </value>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- E3010-REQ-04 Earthing and Bonding Tag -->
+    <specification name="E3010-REQ-04 Earthing and Bonding Tag"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Cable trays forming part of the earthing network shall carry an EarthingDesignation attribute. Required at Stage 4."
+                   instructions="EarthingDesignation must be one of: PrimaryEarthPath, SupplementaryBond, NotInEarthingNetwork."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcCableCarrierSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_CableCarrierSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>EarthingDesignation</simpleValue>
+          </baseName>
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="PrimaryEarthPath"/>
+              <xs:enumeration value="SupplementaryBond"/>
+              <xs:enumeration value="NotInEarthingNetwork"/>
+            </xs:restriction>
+          </value>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         GROUP D2010 — PLUMBING AND PIPEWORK
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- D2010-REQ-01 Pipework Material and Pressure Rating -->
+    <specification name="D2010-REQ-01 Pipework Material and Pressure Rating"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="All pipework elements shall have a material and design pressure rating assigned per the mechanical specification. Required at Stage 3."
+                   instructions="Material and WorkingPressure must both be populated. Material must be from the approved list."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcPipeSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <material necessity="required">
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Copper"/>
+              <xs:enumeration value="CarbonSteel"/>
+              <xs:enumeration value="StainlessSteel304"/>
+              <xs:enumeration value="StainlessSteel316"/>
+              <xs:enumeration value="CPVC"/>
+              <xs:enumeration value="HDPE"/>
+            </xs:restriction>
+          </value>
+        </material>
+        <property datatype="IFCPRESSUREMEASURE" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_PipeSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>WorkingPressure</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D2010-REQ-02 Pipe System and Flow Direction -->
+    <specification name="D2010-REQ-02 Pipe System and Flow Direction Classification"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Each pipework element shall be assigned a system classification and flow direction. Required at Stage 3."
+                   instructions="SystemClassification must match the approved MEP coding scheme. FlowDirection must be SOURCEANDSINK, SOURCE, or SINK."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcPipeSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_PipeSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>SystemClassification</simpleValue>
+          </baseName>
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="DomesticColdWater"/>
+              <xs:enumeration value="DomesticHotWater"/>
+              <xs:enumeration value="HeatingFlow"/>
+              <xs:enumeration value="HeatingReturn"/>
+              <xs:enumeration value="ChilledWaterFlow"/>
+              <xs:enumeration value="ChilledWaterReturn"/>
+              <xs:enumeration value="DrainageAndWaste"/>
+            </xs:restriction>
+          </value>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D2010-REQ-03 Pipework Insulation Specification -->
+    <specification name="D2010-REQ-03 Pipework Insulation Specification"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Where pipework requires insulation, an insulation type and thickness shall be attached to relevant elements. Required at Stage 4."
+                   instructions="InsulationThickness must be present and non-zero. InsulationStandard should reference applicable product standard."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcPipeSegment</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLENGTHMEASURE" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_PipeSegmentTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>InsulationThickness</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D2010-REQ-04 Valves and Accessories LOD 300 -->
+    <specification name="D2010-REQ-04 Valves Isolators and Accessories LOD 300"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Significant in-line valves shall be modelled as discrete IfcValve elements at LOD 300 with duty designation. Required at Stage 4."
+                   instructions="DutyType must be present. ValveReference linking to the CDE data sheet must be populated."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcValve</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_ValveTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>Tag</simpleValue>
+          </baseName>
+        </property>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_ValveTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>ValvePattern</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         GROUP D4010 — FIRE PROTECTION (SPRINKLER HEADS)
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- D4010-REQ-01 Sprinkler Head Location and Coverage Zone -->
+    <specification name="D4010-REQ-01 Sprinkler Head Location and Coverage Zone"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="All sprinkler head elements shall be modelled at installed design position LOD 300 and assigned to a coverage zone. Required at Stage 4."
+                   instructions="CoverageZoneID must be populated and traceable to the hydraulic calculation submitted to the CDE."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcFireSuppressionTerminal</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_FireSuppressionTerminalTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>SprinklerType</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D4010-REQ-02 Sprinkler Head Type and Temperature Rating -->
+    <specification name="D4010-REQ-02 Sprinkler Head Type and Temperature Rating"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Each sprinkler head shall carry a head type and temperature classification consistent with the zone hazard class. Required at Stage 4."
+                   instructions="SprinklerType must be from the approved list. ActivationTemperature must be one of the listed values in degrees C."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcFireSuppressionTerminal</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_FireSuppressionTerminalTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>SprinklerType</simpleValue>
+          </baseName>
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Pendant"/>
+              <xs:enumeration value="Upright"/>
+              <xs:enumeration value="Concealed"/>
+              <xs:enumeration value="Sidewall"/>
+            </xs:restriction>
+          </value>
+        </property>
+        <property datatype="IFCTHERMODYNAMICTEMPERATUREMEASURE" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_FireSuppressionTerminalTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>ActivationTemperature</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D4010-REQ-03 Sprinkler Pipework and Zone Valve Attribution -->
+    <specification name="D4010-REQ-03 Sprinkler Pipework and Zone Valve Attribution"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="Sprinkler distribution pipework shall be modelled to LOD 300 with zone attribution. Zone control valves shall carry a valve reference attribute. Required at Stage 4."
+                   instructions="Tag (valve reference) must be populated for all IfcValve elements in the fire protection system."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcValve</simpleValue>
+          </name>
+        </entity>
+        <property>
+          <propertySet>
+            <simpleValue>Pset_ValveTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>ValveOperation</simpleValue>
+          </baseName>
+          <value>
+            <simpleValue>ZONECONTROLVALVE</simpleValue>
+          </value>
+        </property>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_ValveTypeCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>Tag</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+    <!-- D4010-REQ-04 Sprinkler Design Standard and Hazard Class -->
+    <specification name="D4010-REQ-04 Sprinkler Design Standard and Hazard Class"
+                   ifcVersion="IFC2X3 IFC4"
+                   description="The sprinkler model shall record the governing design standard and hazard occupancy classification for each zone. Required at Stage 4."
+                   instructions="DesignStandard and HazardClass must be present at zone level. HazardClass must match LPC/BS EN 12845/NFPA 13 classification scheme."
+                   necessity="required">
+      <applicability>
+        <entity>
+          <name>
+            <simpleValue>IfcZone</simpleValue>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property datatype="IFCLABEL" necessity="required">
+          <propertySet>
+            <simpleValue>Pset_ZoneCommon</simpleValue>
+          </propertySet>
+          <baseName>
+            <simpleValue>Category</simpleValue>
+          </baseName>
+        </property>
+      </requirements>
+    </specification>
+
+  </specifications>
+</ids>
